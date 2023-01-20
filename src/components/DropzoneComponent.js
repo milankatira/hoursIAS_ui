@@ -4,6 +4,7 @@ import ResponsiveAppBar from "./Header";
 import { Button } from "@mui/material";
 import styles from "./dropzone.module.scss";
 import { addPdf } from "../service/pdf.service";
+import TextField from "@mui/material/TextField";
 // import "./dropzone.css"
 
 const baseStyle = {
@@ -40,7 +41,8 @@ const rejectStyle = {
 function DropzoneComponent(props) {
   const [files, setFiles] = useState([]);
   const [fileUrl, setFileUrl] = useState("");
-
+  const [pageFrom, setpageFrom] = useState(0);
+  const [pageTo, setpageTo] = useState(0);
   const onDrop = useCallback((acceptedFiles) => {
     setFiles(acceptedFiles);
     const fileUrl = URL.createObjectURL(acceptedFiles[0]);
@@ -76,10 +78,10 @@ function DropzoneComponent(props) {
   );
 
   const HandleSubmit = async () => {
-   
     const formdata = new FormData();
     formdata.append("pdf", files[0]);
-
+    formdata.append("availablePageFrom", pageFrom);
+    formdata.append("availablePageTo", pageTo);
     try {
       await addPdf(formdata);
     } catch (err) {
@@ -100,6 +102,26 @@ function DropzoneComponent(props) {
             {files && files[0]?.name}
           </a>
         </div>
+        <br />
+        <TextField
+          type="number"
+          id="outlined-basic"
+          label="page from"
+          variant="outlined"
+          value={pageFrom}
+          onChange={(e) => setpageFrom(e.target.value)}
+        />
+        <br />
+
+        <TextField
+          type="number"
+          id="outlined-basic"
+          label="page to"
+          variant="outlined"
+          value={pageTo}
+          onChange={(e) => setpageTo(e.target.value)}
+        />
+
         <Button
           className={styles.main__buttonContainer}
           color="primary"

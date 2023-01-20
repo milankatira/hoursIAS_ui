@@ -11,6 +11,7 @@ import ResponsiveAppBar from "./Header";
 import { Button } from "@mui/material";
 import { getPdfService } from "../service/pdf.service";
 import styles from './table.module.scss';
+import { serverUrl } from "../constant/appConfig";
 const columns = [
   { id: "name", label: "Name", minWidth: 170 },
   {
@@ -81,7 +82,7 @@ export default function StickyHeadTable() {
                       {column.fileName}
                     </TableCell>
                     <TableCell>
-                      <Button type="button">Action</Button>
+                      <a href={`${serverUrl}${column.fileName}`} target="_blank">View</a>
                     </TableCell>
                   </TableRow>
                 );

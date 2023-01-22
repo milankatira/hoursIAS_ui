@@ -1,9 +1,3 @@
-/* .dropzone {
-  border: 2px dashed red;
-  border-radius: 5px;
-  padding: 20px;
-  text-align: center;
-} */
 
 .main__container {
   display: flex;
@@ -15,3 +9,12 @@
     margin-top: 20px;
   }
 }
+
+
+.main__field__container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+

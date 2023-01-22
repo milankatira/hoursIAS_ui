@@ -8,10 +8,15 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import ResponsiveAppBar from "./Header";
-import { Button } from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { getPdfService } from "../service/pdf.service";
-import styles from './table.module.scss';
+import styles from "./table.module.scss";
 import { serverUrl } from "../constant/appConfig";
+import PDFReader from "./PDFReader";
 const columns = [
   { id: "name", label: "Name", minWidth: 170 },
   {
@@ -79,10 +84,37 @@ export default function StickyHeadTable() {
                       align={column.align}
                       className={styles.main__container}
                     >
-                      {column.fileName}
-                    </TableCell>
-                    <TableCell>
-                      <a href={`${serverUrl}${column.fileName}`} target="_blank">View</a>
+                      <Accordion>
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1a-content"
+                          id="panel1a-header"
+                        >
+                          <Typography> {column.fileName}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          {column.bookMark.map((item) => (
+                            <>
+                              {/* <Typography>{item.name}</Typography> */}
+                              <Accordion>
+                                <AccordionSummary
+                                  expandIcon={<ExpandMoreIcon />}
+                                  aria-controls="panel1a-content"
+                                  id="panel1a-header"
+                                >
+                                  <Typography> {item.name}</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <PDFReader
+                                    availablePageFrom={item.availablePageFrom}
+                                    availablePageTo={item.availablePageTo}
+                                  />
+                                </AccordionDetails>
+                              </Accordion>
+                            </>
+                          ))}
+                        </AccordionDetails>
+                      </Accordion>
                     </TableCell>
                   </TableRow>
                 );

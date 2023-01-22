@@ -5,6 +5,11 @@ import { Button } from "@mui/material";
 import styles from "./dropzone.module.scss";
 import { addPdf } from "../service/pdf.service";
 import TextField from "@mui/material/TextField";
+
+import { Formik, Form, FieldArray, Field } from "formik";
+import { initialValues } from "../constant/initialValue";
+import { validationSchema } from "../constant/ValidationSchema";
+
 // import "./dropzone.css"
 
 const baseStyle = {
@@ -77,11 +82,18 @@ function DropzoneComponent(props) {
     [files]
   );
 
-  const HandleSubmit = async () => {
+  const HandleSubmit = async (data) => {
+    console.log(data.bookMark,"BOOKMARK");
     const formdata = new FormData();
+
     formdata.append("pdf", files[0]);
-    formdata.append("availablePageFrom", pageFrom);
-    formdata.append("availablePageTo", pageTo);
+
+    for (let i = 0; i < data.bookMark.length; i += 1) {
+      formdata.append(`bookMark[${i}]`, data.bookMark[i].availablePageFrom);
+      formdata.append(`bookMark[${i}]`, data.bookMark[i].availablePageTo);
+      formdata.append(`bookMark[${i}]`, data.bookMark[i].name);
+    }
+
     try {
       await addPdf(formdata);
     } catch (err) {
@@ -92,46 +104,143 @@ function DropzoneComponent(props) {
   return (
     <>
       <ResponsiveAppBar />
-      <section className={styles.main__container}>
-        <div className="dropzone" {...getRootProps({ style })}>
-          <input {...getInputProps()} />
-          <div>Drag and drop your PDF here.</div>
-        </div>
-        <div>
-          <a href={fileUrl} target="_blank">
-            {files && files[0]?.name}
-          </a>
-        </div>
-        <br />
-        <TextField
-          type="number"
-          id="outlined-basic"
-          label="page from"
-          variant="outlined"
-          value={pageFrom}
-          onChange={(e) => setpageFrom(e.target.value)}
-        />
-        <br />
 
-        <TextField
-          type="number"
-          id="outlined-basic"
-          label="page to"
-          variant="outlined"
-          value={pageTo}
-          onChange={(e) => setpageTo(e.target.value)}
-        />
+      <Formik
+        initialValues={initialValues.pdf}
+        onSubmit={HandleSubmit}
+        validationSchema={validationSchema.pdf}
+      >
+        {({ values, errors, touched }) => {
+          return (
+            <Form
+              noValidate
+              autoComplete="off"
+              className={styles.main__container}
+            >
+              <section>
+                <div className="dropzone" {...getRootProps({ style })}>
+                  <input {...getInputProps()} />
+                  <div>Drag and drop your PDF here.</div>
+                </div>
+                <div>
+                  <a href={fileUrl} target="_blank">
+                    {files && files[0]?.name}
+                  </a>
+                </div>
+                <br />
+              </section>
+              <FieldArray
+                name="bookMark"
+                render={(arrayHelpers) => (
+                  <div>
+                    {values?.bookMark?.map((singleValue, index) => (
+                      <div className={styles.main__field__container}>
+                        <Field
+                          as={TextField}
+                          name={`bookMark[${index}].name`}
+                          type="text"
+                          id="outlined-basic"
+                          label="name"
+                          variant="outlined"
+                          error={
+                            touched &&
+                            touched.bookMark &&
+                            touched?.bookMark[index]?.name &&
+                            errors &&
+                            errors.bookMark &&
+                            errors.bookMark[index]?.name
+                          }
+                          helperText={
+                            touched &&
+                            touched.bookMark &&
+                            touched?.bookMark[index]?.name &&
+                            errors &&
+                            errors.bookMark &&
+                            errors.bookMark[index]?.name
+                          }
+                        />
+                        <br />
+                        <Field
+                          as={TextField}
+                          name={`bookMark[${index}].availablePageFrom`}
+                          type="text"
+                          id="outlined-basic"
+                          label="availablePageFrom"
+                          variant="outlined"
+                          error={
+                            touched &&
+                            touched.bookMark &&
+                            touched?.bookMark[index]?.availablePageFrom &&
+                            errors &&
+                            errors.bookMark &&
+                            errors.bookMark[index]?.availablePageFrom
+                          }
+                          helperText={
+                            touched &&
+                            touched.bookMark &&
+                            touched?.bookMark[index]?.availablePageFrom &&
+                            errors &&
+                            errors.bookMark &&
+                            errors.bookMark[index]?.availablePageFrom
+                          }
+                        />
+                        <br />
+                        <Field
+                          as={TextField}
+                          name={`bookMark[${index}].availablePageTo`}
+                          type="text"
+                          id="outlined-basic"
+                          label="availablePageTo"
+                          variant="outlined"
+                          error={
+                            touched &&
+                            touched.bookMark &&
+                            touched?.bookMark[index]?.availablePageTo &&
+                            errors &&
+                            errors.bookMark &&
+                            errors.bookMark[index]?.availablePageTo
+                          }
+                          helperText={
+                            touched &&
+                            touched.bookMark &&
+                            touched?.bookMark[index]?.availablePageTo &&
+                            errors &&
+                            errors.bookMark &&
+                            errors.bookMark[index]?.availablePageTo
+                          }
+                        />
+                        <br />
+                        <br />
+                      </div>
+                    ))}
 
-        <Button
-          className={styles.main__buttonContainer}
-          color="primary"
-          variant="contained"
-          disabled={!files}
-          onClick={HandleSubmit}
-        >
-          submit
-        </Button>
-      </section>
+                    <Button
+                      onClick={() =>
+                        arrayHelpers.push({
+                          availablePageFrom: "",
+                          availablePageTo: "",
+                          name: "",
+                        })
+                      }
+                    >
+                      Add a Address
+                    </Button>
+                  </div>
+                )}
+              />
+
+              <Button
+                className={styles.main__buttonContainer}
+                color="primary"
+                variant="contained"
+                type="submit"
+              >
+                submit
+              </Button>
+            </Form>
+          );
+        }}
+      </Formik>
     </>
   );
 }

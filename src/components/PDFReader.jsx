@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import Loader from './Loader';
-import { Page, pdfjs } from 'react-pdf';
+import React, { useState } from "react";
+import Loader from "./Loader";
+import { Page, pdfjs } from "react-pdf";
 import { Document } from "react-pdf/dist/esm/entry.webpack";
 
-import ControlPanel from './ControlPanel';
+import ControlPanel from "./ControlPanel";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-const PDFReader = ({ availablePageFrom }) => {
+const PDFReader = ({ availablePageFrom, availablePageTo }) => {
   const [scale, setScale] = useState(1.0);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(parseInt(availablePageFrom));
@@ -25,6 +25,8 @@ const PDFReader = ({ availablePageFrom }) => {
         className="d-flex flex-column align-items-center w-100"
       >
         <ControlPanel
+          availablePageFrom={availablePageFrom}
+          availablePageTo={availablePageTo}
           scale={scale}
           setScale={setScale}
           numPages={numPages}

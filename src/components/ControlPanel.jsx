@@ -2,10 +2,19 @@ import React from "react";
 import PDFPrinter from "./PDFPrinter";
 
 const ControlPanel = (props) => {
-  const { file, pageNumber, numPages, setPageNumber, scale, setScale } = props;
+  const {
+    availablePageFrom,
+    availablePageTo,
+    file,
+    pageNumber,
+    numPages,
+    setPageNumber,
+    scale,
+    setScale,
+  } = props;
 
-  const isFirstPage = pageNumber === 3;
-  const isLastPage = pageNumber === 6;
+  const isFirstPage = pageNumber === parseInt(availablePageFrom);
+  const isLastPage = pageNumber === parseInt(availablePageTo);
 
   const firstPageClass = isFirstPage ? "disabled" : "clickable";
   const lastPageClass = isLastPage ? "disabled" : "clickable";

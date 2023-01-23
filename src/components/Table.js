@@ -15,18 +15,7 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { getPdfService } from "../service/pdf.service";
 import styles from "./table.module.scss";
-import { serverUrl } from "../constant/appConfig";
 import PDFReader from "./PDFReader";
-const columns = [
-  { id: "name", label: "Name", minWidth: 170 },
-  {
-    id: "action",
-    label: "Action",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-];
 
 function createData(name, action) {
   // const density = population / size;
@@ -95,7 +84,6 @@ export default function StickyHeadTable() {
                         <AccordionDetails>
                           {column.bookMark.map((item) => (
                             <>
-                              {/* <Typography>{item.name}</Typography> */}
                               <Accordion>
                                 <AccordionSummary
                                   expandIcon={<ExpandMoreIcon />}
